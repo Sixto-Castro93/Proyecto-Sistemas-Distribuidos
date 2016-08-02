@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package RedisChat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import redis.clients.jedis.JedisPubSub;
 /**
  *
@@ -11,10 +13,14 @@ import redis.clients.jedis.JedisPubSub;
  */
 
 public class Subscriber extends JedisPubSub {
+    public static HashMap canalesCliente = new HashMap();
+    public ArrayList<String> listaMensaje = new ArrayList<>();
     @Override
     public void onMessage(String channel, String message)
     {
             System.out.println("Message received from channel: "+channel+ " Msg: " + message);
+            listaMensaje.add(message);
+            canalesCliente.put(channel, listaMensaje);
     }
     @Override
         public void onPMessage(String pattern, String channel, String message) {

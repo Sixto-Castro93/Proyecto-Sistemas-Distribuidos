@@ -8,6 +8,7 @@ package RedisChat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import redis.clients.jedis.Jedis;
@@ -18,7 +19,8 @@ import redis.clients.jedis.JedisPool;
  * @author emele_000
  */
 public class Subcribir_Crear {
-
+    public static ArrayList<String> canalesSuscritos = new ArrayList<>();
+    
     public static void Subcribir_Crear(String IpServidor) throws IOException {
 
         JedisPool jedispool = new JedisPool(IpServidor);
@@ -81,6 +83,7 @@ public class Subcribir_Crear {
                     System.out.println("Ingrese el nombre del canal:");
                     final String canal_new = reader1.readLine();
                     if (canal_new != null) {
+                        canalesSuscritos.add(canal_new);
                         System.out.println("Ingrese un nombre para identificarse en este grupo");
                         String name = reader1.readLine();
                         if (name != null) {

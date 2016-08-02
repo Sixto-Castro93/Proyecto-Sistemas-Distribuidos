@@ -8,6 +8,7 @@ package RedisChat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import redis.clients.jedis.Jedis;
@@ -28,6 +29,7 @@ public class RedisPubSub {
         final String IpServidor="localhost";
         JedisPool jedispool = new JedisPool(IpServidor);
         boolean bandera = true;
+        ArrayList<String> canalesSub = new ArrayList<String>();
         while (bandera) {
             System.out.println("-----Bienvenidos a nuestro sistema de mensajeria-----");
             System.out.println("Elija una de las siguientes opciones:");
@@ -44,7 +46,15 @@ public class RedisPubSub {
                     break;
 
                 case "2":
-                    break;
+                    canalesSub=Subcribir_Crear.canalesSuscritos;
+                    if(canalesSub.isEmpty()){
+                        System.out.println("No existe canales disponibles. Por favor, ingrese en la opcion 1");
+                        break;
+                    }
+                    else{
+                        VerGrupos.ver_grupos(canalesSub);
+                        break;
+                    }
                 case "3":
                     break;
                 case "4":
