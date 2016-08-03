@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 package RedisChat;
+import static RedisChat.Subscriber.canalesCliente;
+import static RedisChat.Subscriber.listaMensaje;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -18,6 +21,7 @@ public class Publisher
 {
     private final Jedis publisherJedis ;
     private final String channel_name;
+    public static boolean valida;
   
     public Publisher(Jedis publisherJedis, String channel)
     {
@@ -26,7 +30,7 @@ public class Publisher
     }
     public void start()
     {
-        System.out.println("Type your message....exit for terminate");
+        System.out.println("Escriba su mensaje....'exit' para salir de la conversacion");
         try
       {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -36,10 +40,11 @@ public class Publisher
                   String line = reader.readLine();
                   if (!"exit".equals(line)) {
                      publisherJedis.publish(channel_name, line);
+
                     }
             else {
-                            break;
-                      }
+                    break;
+                 }
                 }
         }
     catch (IOException e) {

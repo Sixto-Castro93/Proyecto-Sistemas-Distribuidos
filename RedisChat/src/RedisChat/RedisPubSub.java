@@ -24,6 +24,7 @@ public class RedisPubSub {
      * @param args the command line arguments
      */
     public static final String channel_name = "redisChannel";
+    public static boolean validaVerMsj=false;
 
     public static void main(String[] args) throws Exception {
         final String IpServidor="localhost";
@@ -38,6 +39,7 @@ public class RedisPubSub {
             System.out.println("3.-Eliminar Grupos Subscritos");
             System.out.println("4.-Ayuda y quienes somos");
             System.out.println("5.-Salir");
+            RedisPubSub.validaVerMsj=false;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String canalElejido = reader.readLine();
             switch (canalElejido) {
@@ -52,7 +54,8 @@ public class RedisPubSub {
                         break;
                     }
                     else{
-                        VerGrupos.ver_grupos(canalesSub);
+                        validaVerMsj=true;
+                        VerGrupos.ver_grupos(canalesSub, jedispool);
                         break;
                     }
                 case "3":

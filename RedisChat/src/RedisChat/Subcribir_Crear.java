@@ -52,7 +52,7 @@ public class Subcribir_Crear {
                         String opcion_canal = reader1.readLine();
                         final String cn = (String) Base.get(opcion_canal);
                         if (cn != null) {
-
+                            canalesSuscritos.add(cn);    
                             System.out.println("Ingrese un nombre para identificarse en este grupo");
                             String name = reader1.readLine();
                             if (name != null) {
