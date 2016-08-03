@@ -31,25 +31,25 @@ public class VerGrupos {
         }
         System.out.println("Seleccione el nombre de grupo para ver los mensajes respectivos");
         String canal = reader1.readLine();
-        if(Subscriber.canalesCliente.get(canal)==null){
+        
+        if(Subcribir_Crear.canalesSuscritos.contains(canal)==false){
             System.out.println("El canal "+ canal+" no existe o no se encuentra suscrito a ese canal");
         }
-        
-//        if ((mensajes.isEmpty()) || (mensajes==null)) {
-//            System.out.println("No existen mensajes en el canal "+ canal);
-//                        
-//               
-//        } 
+       
         else {
-            mensajes = (ArrayList) Subscriber.canalesCliente.get(canal);
-            int longitud= mensajes.size();
-            for(int j=0; j<longitud; j++){
-                System.out.println("Canal "+canal+" Mensaje: "+mensajes.get(j));
+            if(Subscriber.canalesCliente.get(canal)==null){
+                System.out.println("Bienvenido al canal "+ canal+"!!");
+            }else{
+                mensajes = (ArrayList) Subscriber.canalesCliente.get(canal);
+                int longitud= mensajes.size();
+                for(int j=0; j<longitud; j++){
+                    System.out.println("Canal "+canal+" Mensaje: "+mensajes.get(j));
+                }
             }
-            
+            canalVerifica=canal;
+            new Publisher(publisherJedis,canal).start();
         }
-        canalVerifica=canal;
-        new Publisher(publisherJedis,canal).start();
+        
         
         
     }
