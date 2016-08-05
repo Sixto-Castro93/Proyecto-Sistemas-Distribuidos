@@ -27,6 +27,7 @@ public class VerGrupos {
         Jedis publisherJedis = jedispool.getResource();
         ArrayList<String> mensajes = new ArrayList<>();
         BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
+<<<<<<< HEAD
         boolean bandera1 = true;
         while (bandera1) {
             System.out.println("Grupos suscritos");
@@ -77,6 +78,35 @@ public class VerGrupos {
             }
 
         }
+=======
+        System.out.println("Grupos suscritos");
+        for(int i=0; i<tam; i++){
+            System.out.println(/*(i+1)+".- "+*/canales.get(i));
+        }
+        System.out.println("Seleccione el nombre de grupo para ver los mensajes respectivos");
+        String canal = reader1.readLine();
+        
+        if(Subcribir_Crear.canalesSuscritos.contains(canal)==false){
+            System.out.println("El canal "+ canal+" no existe o no se encuentra suscrito a ese canal");
+        }
+       
+        else {
+            if(Subscriber.canalesCliente.get(canal)==null){
+                System.out.println("Bienvenido al canal "+ canal+"!!");
+            }else{
+                mensajes = (ArrayList) Subscriber.canalesCliente.get(canal);
+                int longitud= mensajes.size();
+                for(int j=0; j<longitud; j++){
+                    System.out.println("Canal "+canal+" Mensaje: "+mensajes.get(j));
+                }
+            }
+            canalVerifica=canal;
+            new Publisher(publisherJedis,canal).start();
+        }
+        
+        
+        
+>>>>>>> origin/master
     }
 
 }
