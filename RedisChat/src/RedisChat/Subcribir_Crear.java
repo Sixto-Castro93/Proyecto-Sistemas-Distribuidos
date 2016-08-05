@@ -21,9 +21,10 @@ import redis.clients.jedis.JedisPool;
 public class Subcribir_Crear {
 
     public static HashMap<String, String> canalesSuscritos = new HashMap<>();
+    public static HashMap<String, Subscriber> subscriberCanales = new HashMap<>();
 
     public static void Subcribir_Crear(String IpServidor) throws IOException {
-
+        HashMap<String, Subscriber> suscriberCanales = new HashMap<>();
         JedisPool jedispool = new JedisPool(IpServidor);
         final Jedis subscriberJedis = jedispool.getResource();
         final Subscriber subscriber = new Subscriber();
@@ -63,7 +64,7 @@ public class Subcribir_Crear {
                                 System.out.println("Ingrese un nombre para identificarse en este grupo");
                                 String name = reader1.readLine();
                                 if (name != null) {
-
+                                    subscriberCanales.put(cn, subscriber);
                                     canalesSuscritos.put(cn, name);
                                     bandera1 = false;
                                     System.out.println("Subscrito a  " + cn + " con nombre :" + name);
@@ -73,7 +74,7 @@ public class Subcribir_Crear {
                                             try {
 
                                                 subscriberJedis.subscribe(subscriber, (String) cn);
-                                                System.out.println("Subscricion terminada a: " + cn);
+                                                //System.out.println("Subscricion terminada a: " + cn);
 
                                             } catch (Exception e) {
                                                 System.out.println("Subscribing failed." + e);
@@ -101,6 +102,7 @@ public class Subcribir_Crear {
                             System.out.println("Ingrese un nombre para identificarse en este grupo");
                             String name = reader1.readLine();
                             if (name != null) {
+                                subscriberCanales.put(canal_new, subscriber);
                                 canalesSuscritos.put(canal_new, name);
                                 bandera1 = false;
                                 System.out.println("Subscrito a  " + canal_new + " con nombre :" + name);
@@ -111,7 +113,7 @@ public class Subcribir_Crear {
                                         try {
 
                                             subscriberJedis.subscribe(subscriber, (String) canal_new);
-                                            System.out.println("Subscricion terminada a: " + canal_new);
+                                            //System.out.println("Subscricion terminada a: " + canal_new);
 
                                         } catch (Exception e) {
                                             System.out.println("Subscribing failed." + e);

@@ -62,6 +62,11 @@ public class VerGrupos {
                                     System.out.println("Mensaje: " + mensajes.get(j));
                                 }
                             }
+                            else{
+                                System.out.println("Bienvenid@ al canal: " + canal+"!!");
+                
+                            }
+                           
                             canalVerifica = canal;
 
                             new Publisher(publisherJedis, canal, canales.get(canal))

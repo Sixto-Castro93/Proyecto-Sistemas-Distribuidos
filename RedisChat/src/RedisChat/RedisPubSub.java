@@ -27,7 +27,7 @@ public class RedisPubSub {
     public static boolean validaVerMsj=false;
 
     public static void main(String[] args) throws Exception {
-        final String IpServidor="localhost";
+        final String IpServidor=args[0];
         JedisPool jedispool = new JedisPool(IpServidor);
         boolean bandera = true;
         HashMap<String,String> canalesSub = new HashMap<String,String>();
@@ -59,7 +59,16 @@ public class RedisPubSub {
                         break;
                     }
                 case "3":
-                    break;
+                    canalesSub=Subcribir_Crear.canalesSuscritos;
+                    if(canalesSub.isEmpty()){
+                        System.out.println("No existe canales disponibles. Por favor, ingrese en la opcion 1");
+                        break;
+                    }
+                    else{
+                        //validaVerMsj=true;
+                        EliminarGrupos.eliminar_grupos(canalesSub, jedispool);
+                        break;
+                    }
                 case "4":
                     break;
                 case "5":
