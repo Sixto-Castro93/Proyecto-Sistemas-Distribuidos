@@ -30,7 +30,7 @@ public class RedisPubSub {
         final String IpServidor="localhost";
         JedisPool jedispool = new JedisPool(IpServidor);
         boolean bandera = true;
-        ArrayList<String> canalesSub = new ArrayList<String>();
+        HashMap<String,String> canalesSub = new HashMap<String,String>();
         while (bandera) {
             System.out.println("-----Bienvenidos a nuestro sistema de mensajeria-----");
             System.out.println("Elija una de las siguientes opciones:");
@@ -71,11 +71,11 @@ public class RedisPubSub {
 
         }
 
-        Jedis publisherJedis = jedispool.getResource();
-        new Publisher(publisherJedis, channel_name).start();
+        //Jedis publisherJedis = jedispool.getResource();
+        //new Publisher(publisherJedis, channel_name).start();
         //subscriber.unsubscribe();
         //jedispool.returnResource(subscriberJedis);
-        jedispool.returnResource(publisherJedis);
+       // jedispool.returnResource(publisherJedis);
     }
 
    

@@ -19,8 +19,9 @@ import redis.clients.jedis.JedisPool;
  * @author emele_000
  */
 public class Subcribir_Crear {
-    public static ArrayList<String> canalesSuscritos = new ArrayList<>();
-    
+
+    public static HashMap<String, String> canalesSuscritos = new HashMap<>();
+
     public static void Subcribir_Crear(String IpServidor) throws IOException {
 
         JedisPool jedispool = new JedisPool(IpServidor);
@@ -31,6 +32,7 @@ public class Subcribir_Crear {
             System.out.println("Elija una opcion");
             System.out.println("1.-Subscribirse a un grupo existente");
             System.out.println("2.-Crear nuevo grupo");
+            System.out.println("3.-Regresar");
             BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
             String opcion = reader1.readLine();
             switch (opcion) {
@@ -46,33 +48,41 @@ public class Subcribir_Crear {
                         for (String canal : listaCanales) {
 
                             Base.put(Integer.toString(i), canal);
-                            System.out.println("canal_" + i + ": " + canal);
+                            System.out.println(i + ": " + canal);
                             i++;
                         }
                         String opcion_canal = reader1.readLine();
                         final String cn = (String) Base.get(opcion_canal);
                         if (cn != null) {
-                            canalesSuscritos.add(cn);    
-                            System.out.println("Ingrese un nombre para identificarse en este grupo");
-                            String name = reader1.readLine();
-                            if (name != null) {
+                            String canal_verificacion = (String) canalesSuscritos.get(cn);
+                            if (canal_verificacion != null) {
+                                System.out.println("Ud ya se encuentra registrado a este grupo");
 
-                                bandera1 = false;
-                                System.out.println("Subscrito a  " + cn + " con nombre :" + name);
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
+                            } else {
 
-                                            subscriberJedis.subscribe(subscriber, (String) cn);
-                                            System.out.println("Subscricion terminada a: " + cn);
+                                System.out.println("Ingrese un nombre para identificarse en este grupo");
+                                String name = reader1.readLine();
+                                if (name != null) {
 
-                                        } catch (Exception e) {
-                                            System.out.println("Subscribing failed." + e);
+                                    canalesSuscritos.put(cn, name);
+                                    bandera1 = false;
+                                    System.out.println("Subscrito a  " + cn + " con nombre :" + name);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+
+                                                subscriberJedis.subscribe(subscriber, (String) cn);
+                                                System.out.println("Subscricion terminada a: " + cn);
+
+                                            } catch (Exception e) {
+                                                System.out.println("Subscribing failed." + e);
+                                            }
                                         }
-                                    }
-                                }).start();
+                                    }).start();
+                                }
                             }
+
                         } else {
                             System.out.println("Ese canal no esta dentro del rango de opciones");
                         }
@@ -83,29 +93,37 @@ public class Subcribir_Crear {
                     System.out.println("Ingrese el nombre del canal:");
                     final String canal_new = reader1.readLine();
                     if (canal_new != null) {
-                        canalesSuscritos.add(canal_new);
-                        System.out.println("Ingrese un nombre para identificarse en este grupo");
-                        String name = reader1.readLine();
-                        if (name != null) {
+                        String canal_verificacion = (String) canalesSuscritos.get(canal_new);
+                        if (canal_verificacion != null) {
+                            System.out.println("Ud ya se encuentra registrado a este grupo");
 
-                            bandera1 = false;
-                            System.out.println("Subscrito a  " + canal_new + " con nombre :" + name);
+                        } else {
+                            System.out.println("Ingrese un nombre para identificarse en este grupo");
+                            String name = reader1.readLine();
+                            if (name != null) {
+                                canalesSuscritos.put(canal_new, name);
+                                bandera1 = false;
+                                System.out.println("Subscrito a  " + canal_new + " con nombre :" + name);
 
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
 
-                                        subscriberJedis.subscribe(subscriber, (String) canal_new);
-                                        System.out.println("Subscricion terminada a: " + canal_new);
+                                            subscriberJedis.subscribe(subscriber, (String) canal_new);
+                                            System.out.println("Subscricion terminada a: " + canal_new);
 
-                                    } catch (Exception e) {
-                                        System.out.println("Subscribing failed." + e);
+                                        } catch (Exception e) {
+                                            System.out.println("Subscribing failed." + e);
+                                        }
                                     }
-                                }
-                            }).start();
+                                }).start();
+                            }
                         }
                     }
+                    break;
+                case "3":
+                    bandera1 = false;
                     break;
                 default:
                     break;

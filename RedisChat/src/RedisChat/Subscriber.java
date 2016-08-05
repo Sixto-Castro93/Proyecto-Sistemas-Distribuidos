@@ -19,9 +19,11 @@ public class Subscriber extends JedisPubSub {
     @Override
     public void onMessage(String channel, String message)
     {
+    //    System.out.println("Message received from channel: "+channel+ " Msg: " + message);
+           
             ArrayList<String> lista;
             if(RedisPubSub.validaVerMsj==true && VerGrupos.canalVerifica.equals(channel)){
-                System.out.println("Message received from channel: "+channel+ " Msg: " + message);
+                System.out.println("Mensaje: " + message);
                 
             }
             if(canalesCliente.containsKey(channel)){

@@ -21,17 +21,18 @@ public class Publisher
 {
     private final Jedis publisherJedis ;
     private final String channel_name;
+        private final String name_user;
     public static boolean valida;
   
-    public Publisher(Jedis publisherJedis, String channel)
+    public Publisher(Jedis publisherJedis, String channel,String user)
     {
            this.publisherJedis = publisherJedis;
             this.channel_name = channel;
+            this.name_user=user;
     }
     public void start()
     {
-        System.out.println("Escriba su mensaje....'exit' para salir de la conversacion");
-        try
+           try
       {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
   
@@ -39,7 +40,7 @@ public class Publisher
              {
                   String line = reader.readLine();
                   if (!"exit".equals(line)) {
-                     publisherJedis.publish(channel_name, line);
+                     publisherJedis.publish(channel_name,name_user+":"+ line);
 
                     }
             else {
