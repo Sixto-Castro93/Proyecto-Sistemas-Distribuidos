@@ -25,21 +25,21 @@ import redis.clients.jedis.JedisPool;
  */
 public class VentanaSuscribir extends javax.swing.JFrame {
     public static HashMap<String, String> canalesSuscritos;
-    public static HashMap<String, Subscriber> subscriberCanales;
-    private final Subscriber subscriber;
+    public static HashMap<String, Subscriber2> subscriberCanales;
+    private final Subscriber2 subscriber;
     String nombreCanal;
     final Jedis subscriberJedis;
     /**
      * Creates new form VentanaSuscribir
      */
-    public VentanaSuscribir(String ipServidor,final HashMap<String, String> canalesSuscritos,HashMap<String, Subscriber> subscriberCanales) {
+    public VentanaSuscribir(String ipServidor,final HashMap<String, String> canalesSuscritos,HashMap<String, Subscriber2> subscriberCanales) {
         initComponents();
         this.canalesSuscritos= canalesSuscritos;
         this.subscriberCanales = subscriberCanales;
         HashMap<String, Subscriber> suscriberCanales = new HashMap<>();
         JedisPool jedispool = new JedisPool(ipServidor);
         subscriberJedis = jedispool.getResource();
-        subscriber = new Subscriber();
+        subscriber = new Subscriber2();
         List<String> listaCanales = subscriberJedis.pubsubChannels("*");
         final DefaultListModel listModel = new DefaultListModel();
         if (listaCanales.isEmpty()) {

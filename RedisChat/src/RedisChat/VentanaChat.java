@@ -23,7 +23,7 @@ public class VentanaChat extends javax.swing.JFrame {
     private final Jedis publisherJedis ;
     private final String nombreCanal;
     private final String nombreUsuario;
-    private DefaultListModel listModel;
+    public static DefaultListModel listModel;
     /**
      * Creates new form VentanaChat
      */
@@ -165,7 +165,7 @@ public class VentanaChat extends javax.swing.JFrame {
         if(!mensaje.isEmpty()){
             publisherJedis.publish(nombreCanal,nombreUsuario+":"+ mensaje);
             mensajeTextArea.setText("");
-            listModel.addElement(nombreUsuario+":"+ mensaje);
+            //listModel.addElement(nombreUsuario+":"+ mensaje);
         }
             
     }//GEN-LAST:event_EnviarActionPerformed

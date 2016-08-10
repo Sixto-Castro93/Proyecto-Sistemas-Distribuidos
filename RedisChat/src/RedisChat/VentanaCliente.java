@@ -22,11 +22,11 @@ public class VentanaCliente extends javax.swing.JFrame {
      * Creates new form VentanaCliente
      */
     public static HashMap<String, String> canalesSuscritos = new HashMap<>();
-    public static HashMap<String, Subscriber> subscriberCanales = new HashMap<>();
+    public static HashMap<String, Subscriber2> subscriberCanales = new HashMap<>();
     public static final String channel_name = "redisChannel";
     public static boolean validaVerMsj=false;
     private static String IpServidor=null;
-    private static final Subscriber subscriber = new Subscriber();
+    private static final Subscriber2 subscriber = new Subscriber2();
     private static Jedis subscriberJedis = null;
     private static JedisPool jedispool;
     

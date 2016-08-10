@@ -28,6 +28,8 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
     /**
      * Creates new form VentanaVerGrupos
      */
+    public static String canalVerifica = "";
+    
     public VentanaVerGrupos(final HashMap<String, String> canales, JedisPool jedispool) {
         initComponents();
         final Jedis publisherJedis = jedispool.getResource();
@@ -47,11 +49,21 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent evt) {
                 ArrayList<String> mensajes = null;
                 JList list = (JList)evt.getSource();
-                if (evt.getClickCount() == 2) {
+                if(evt.getClickCount()== 1){
+                        if(evt.getButton()==MouseEvent.BUTTON3){
+                            int index = list.locationToIndex(evt.getPoint());
+                            
+                              
+                            jPopupMenu1.show(list, evt.getX(), evt.getY());
+                            
+                        }                     
+                }
+                if (evt.getClickCount() == 2 && evt.getButton()==MouseEvent.BUTTON1) {
                     int index = list.locationToIndex(evt.getPoint());
                     String nombreCanal = jList1.getSelectedValue().toString();
+                    canalVerifica=nombreCanal;
                     if ((nombreCanal) != null){
-                        mensajes =  (ArrayList<String>) Subscriber.canalesCliente.get(nombreCanal);
+                        mensajes =  (ArrayList<String>) Subscriber2.canalesCliente.get(nombreCanal);
                         System.out.println(mensajes);
                     }
                     
@@ -85,11 +97,21 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        eliminarCanalMenuItem = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+
+        eliminarCanalMenuItem.setText("Eliminar Canal");
+        eliminarCanalMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarCanalMenuItemActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(eliminarCanalMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -148,6 +170,10 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void eliminarCanalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCanalMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_eliminarCanalMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -184,10 +210,12 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem eliminarCanalMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
