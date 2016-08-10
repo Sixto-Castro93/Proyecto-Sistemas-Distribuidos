@@ -5,8 +5,10 @@
  */
 package RedisChat;
 
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -14,45 +16,67 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  *
  * @author USUARIO
  */
 public class VentanaSuscribir extends javax.swing.JFrame {
-    JFrame frame;
+    public static HashMap<String, String> canalesSuscritos;
+    public static HashMap<String, Subscriber> subscriberCanales;
+    private final Subscriber subscriber;
+    String nombreCanal;
+    final Jedis subscriberJedis;
     /**
      * Creates new form VentanaSuscribir
      */
-    public VentanaSuscribir() {
+    public VentanaSuscribir(String ipServidor,final HashMap<String, String> canalesSuscritos,HashMap<String, Subscriber> subscriberCanales) {
         initComponents();
+        this.canalesSuscritos= canalesSuscritos;
+        this.subscriberCanales = subscriberCanales;
+        HashMap<String, Subscriber> suscriberCanales = new HashMap<>();
+        JedisPool jedispool = new JedisPool(ipServidor);
+        subscriberJedis = jedispool.getResource();
+        subscriber = new Subscriber();
+        List<String> listaCanales = subscriberJedis.pubsubChannels("*");
         final DefaultListModel listModel = new DefaultListModel();
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        jList1 = new JList(listModel);
-        jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jScrollPane1.setViewportView(jList1);
-        jList1.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                JList list = (JList)evt.getSource();
-                if (evt.getClickCount() == 2) {
-                    int index = list.locationToIndex(evt.getPoint());
-                    nombreDialog.setSize(347, 160);
-                    nombreDialog.setResizable(false);
-                    nombreDialog.setLocationRelativeTo(null);
-                    nombreDialog.setVisible(true);
-                    nombreUsuarioField.setText(listModel.get(index).toString());
-                    // Double-click detected
-                } else if (evt.getClickCount() == 3) {
-
-                    // Triple-click detected
-                    int index = list.locationToIndex(evt.getPoint());
-                }
+        if (listaCanales.isEmpty()) {
+            System.out.println("No hay canales por el momento, cree uno en su defecto");
+            jScrollPane1.setEnabled(false);
+        } 
+        else{
+            HashMap Base = new HashMap();
+            for (String canal : listaCanales) {
+                listModel.addElement(canal);
             }
-        });
-        
+            jList1 = new JList(listModel);
+            jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            jScrollPane1.setViewportView(jList1);
+            jList1.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent evt) {
+                    JList list = (JList)evt.getSource();
+                    if (evt.getClickCount() == 2) {
+                        int index = list.locationToIndex(evt.getPoint());
+                        nombreCanal = jList1.getSelectedValue().toString();
+                        String canal_verificacion = (String) canalesSuscritos.get(nombreCanal);
+                        if (canal_verificacion != null) {
+                                JOptionPane.showMessageDialog(aceptarBoton, "Ya se encuentra registrado en este canal", "Error", JOptionPane.ERROR_MESSAGE);
+                        }else{
+                            nombreDialog.setSize(347, 160);
+                            nombreDialog.setResizable(false);
+                            nombreDialog.setLocationRelativeTo(null);
+                            nombreDialog.setVisible(true);
+                            nombreUsuarioField.setText(listModel.get(index).toString());
+                        }
+                        
+                        // Double-click detected
+                    } 
+                }
+            });
+        }                                
     }
 
     /**
@@ -67,7 +91,7 @@ public class VentanaSuscribir extends javax.swing.JFrame {
         nombreDialog = new javax.swing.JDialog();
         jLabel3 = new javax.swing.JLabel();
         nombreUsuarioField = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        aceptarBoton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
@@ -79,10 +103,10 @@ public class VentanaSuscribir extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 153, 153));
         jLabel3.setText("Nombre de Usuario:");
 
-        jButton2.setText("Aceptar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        aceptarBoton.setText("Aceptar");
+        aceptarBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                aceptarBotonActionPerformed(evt);
             }
         });
 
@@ -107,7 +131,7 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(aceptarBoton)
                 .addGap(68, 68, 68))
         );
         nombreDialogLayout.setVerticalGroup(
@@ -119,12 +143,13 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                 .addComponent(nombreUsuarioField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(nombreDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
+                    .addComponent(aceptarBoton)
                     .addComponent(jButton3))
                 .addGap(22, 22, 22))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jList1);
@@ -150,16 +175,13 @@ public class VentanaSuscribir extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
                     .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(25, 25, 25))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(81, 81, 81)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(25, 25, 25))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,9 +190,9 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(15, 15, 15)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -188,9 +210,30 @@ public class VentanaSuscribir extends javax.swing.JFrame {
         nombreDialog.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void aceptarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarBotonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if(nombreUsuarioField.getText()!=null){
+            subscriberCanales.put(nombreCanal, subscriber);
+            canalesSuscritos.put(nombreCanal, nombreUsuarioField.getText().toString());
+            new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                                subscriberJedis.subscribe(subscriber, nombreCanal);
+                                //System.out.println("Subscricion terminada a: " + cn);
+
+                            } catch (Exception e) {
+                                System.out.println("Subscribing failed." + e);
+                                JOptionPane.showMessageDialog(null, "Suscripción falló", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    }).start();
+                    JOptionPane.showMessageDialog(null, "Se ha suscrito al grupo con éxito");
+                    nombreDialog.dispose();
+                    
+        }
+    }//GEN-LAST:event_aceptarBotonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -224,14 +267,16 @@ public class VentanaSuscribir extends javax.swing.JFrame {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentanaSuscribir().setVisible(true);
+                /*VentanaSuscribir v = new VentanaSuscribir();
+                v.setBackground(Color.yellow);
+                v.setVisible(true);*/
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton aceptarBoton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

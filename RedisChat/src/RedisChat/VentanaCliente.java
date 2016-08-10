@@ -5,7 +5,12 @@
  */
 package RedisChat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  *
@@ -16,8 +21,18 @@ public class VentanaCliente extends javax.swing.JFrame {
     /**
      * Creates new form VentanaCliente
      */
+    public static HashMap<String, String> canalesSuscritos = new HashMap<>();
+    public static HashMap<String, Subscriber> subscriberCanales = new HashMap<>();
+    public static final String channel_name = "redisChannel";
+    public static boolean validaVerMsj=false;
+    private static String IpServidor=null;
+    private static final Subscriber subscriber = new Subscriber();
+    private static Jedis subscriberJedis = null;
+    private static JedisPool jedispool;
+    
     public VentanaCliente() {
         initComponents();
+        
     }
 
     /**
@@ -30,17 +45,17 @@ public class VentanaCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         suscribirCrearDialog = new javax.swing.JDialog();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        suscribirBoton = new javax.swing.JButton();
+        crearGrupoBoton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         crearDialog = new javax.swing.JDialog();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        nombreUsuariolField = new javax.swing.JTextField();
         nombreCanalField = new javax.swing.JTextField();
-        nombreUsuarioField = new javax.swing.JTextField();
-        jButton7 = new javax.swing.JButton();
+        aceptarCrearGrupoBoton = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -48,20 +63,21 @@ public class VentanaCliente extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         suscribirCrearDialog.setTitle("Suscribir/Crear");
+        suscribirCrearDialog.setResizable(false);
 
-        jButton4.setBackground(new java.awt.Color(51, 204, 255));
-        jButton4.setText("Suscribirse");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        suscribirBoton.setBackground(new java.awt.Color(51, 204, 255));
+        suscribirBoton.setText("Suscribirse");
+        suscribirBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                suscribirBotonActionPerformed(evt);
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(51, 204, 255));
-        jButton5.setText("Crear Grupo");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        crearGrupoBoton.setBackground(new java.awt.Color(51, 204, 255));
+        crearGrupoBoton.setText("Crear Grupo");
+        crearGrupoBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                crearGrupoBotonActionPerformed(evt);
             }
         });
 
@@ -82,8 +98,8 @@ public class VentanaCliente extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, suscribirCrearDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(suscribirCrearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5))
+                    .addComponent(suscribirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(crearGrupoBoton))
                 .addGap(122, 122, 122))
             .addGroup(suscribirCrearDialogLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
@@ -98,13 +114,15 @@ public class VentanaCliente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addGap(30, 30, 30)
-                .addComponent(jButton4)
+                .addComponent(suscribirBoton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(crearGrupoBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton6)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
+
+        crearDialog.setResizable(false);
 
         jLabel3.setFont(new java.awt.Font("Traditional Arabic", 1, 24)); // NOI18N
         jLabel3.setText("Crear Grupo");
@@ -117,10 +135,10 @@ public class VentanaCliente extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 102, 102));
         jLabel5.setText("Nombre de Usuario:");
 
-        jButton7.setText("Aceptar");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        aceptarCrearGrupoBoton.setText("Aceptar");
+        aceptarCrearGrupoBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                aceptarCrearGrupoBotonActionPerformed(evt);
             }
         });
 
@@ -141,14 +159,14 @@ public class VentanaCliente extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
                     .addComponent(jLabel4)
-                    .addComponent(nombreCanalField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nombreUsuarioField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombreUsuariolField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nombreCanalField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(81, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, crearDialogLayout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jButton8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7)
+                .addComponent(aceptarCrearGrupoBoton)
                 .addGap(21, 21, 21))
         );
         crearDialogLayout.setVerticalGroup(
@@ -159,20 +177,21 @@ public class VentanaCliente extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nombreUsuarioField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nombreCanalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nombreCanalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nombreUsuariolField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(crearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7)
+                    .addComponent(aceptarCrearGrupoBoton)
                     .addComponent(jButton8))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RedisChat");
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 24)); // NOI18N
         jLabel1.setText("Bienvenidos a RedisChat :)");
@@ -187,9 +206,19 @@ public class VentanaCliente extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(51, 204, 255));
         jButton2.setText("Ver Grupos Suscritos");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setBackground(new java.awt.Color(51, 204, 255));
         jButton3.setText("Eliminar Grupo(s)");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -238,29 +267,75 @@ public class VentanaCliente extends javax.swing.JFrame {
         suscribirCrearDialog.setVisible(false);
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void suscribirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suscribirBotonActionPerformed
         // TODO add your handling code here:
-        VentanaSuscribir v = new VentanaSuscribir();
+        VentanaSuscribir v = new VentanaSuscribir(IpServidor,canalesSuscritos,subscriberCanales);
         v.setLocationRelativeTo(null);
         v.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_suscribirBotonActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void aceptarCrearGrupoBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarCrearGrupoBotonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+        final String canalNuevo = nombreCanalField.getText().toString();
+        String nombreUsuario = nombreUsuariolField.getText().toString();
+        if(!canalNuevo.isEmpty() && !nombreUsuario.isEmpty()){
+            String canal_verificacion = (String) canalesSuscritos.get(canalNuevo);
+            if (canal_verificacion != null) {
+                System.out.println("Ud ya se encuentra registrado a este grupo");
+                JOptionPane.showMessageDialog(null, "Ya se encuentra registrado a un grupo con  este nombre", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                
+                subscriberCanales.put(canalNuevo, subscriber);
+                canalesSuscritos.put(canalNuevo, nombreUsuario);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            subscriberJedis.subscribe(subscriber, (String) canalNuevo);
+                            
+
+                        } catch (Exception e) {
+                            System.out.println("Subscribing failed." + e);
+                        }
+                    }
+                }).start();
+                crearDialog.dispose();
+                suscribirCrearDialog.dispose();
+                JOptionPane.showMessageDialog(null, "Se creo el nuevo canal de chat con exito");
+                
+                System.out.println("Subscricion terminada a: " + canalNuevo);
+            }
+        }
+    }//GEN-LAST:event_aceptarCrearGrupoBotonActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         crearDialog.setVisible(false);
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void crearGrupoBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearGrupoBotonActionPerformed
         // TODO add your handling code here:
         crearDialog.setSize(351, 279);
         crearDialog.setResizable(false);
         crearDialog.setLocationRelativeTo(null);
         crearDialog.setVisible(true);
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_crearGrupoBotonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        VentanaVerGrupos v = new VentanaVerGrupos(canalesSuscritos,jedispool);
+        v.setLocationRelativeTo(null);
+        v.setResizable(false);
+        v.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        VentanaEliminarGrupos v = new VentanaEliminarGrupos();
+        v.setVisible(true);
+        v.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,6 +365,11 @@ public class VentanaCliente extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        IpServidor = args[0];
+        jedispool = new JedisPool(IpServidor);
+        subscriberJedis = jedispool.getResource();
+        HashMap<String,String> canalesSub = new HashMap<String,String>();
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 VentanaCliente v= new VentanaCliente();;
@@ -301,14 +381,13 @@ public class VentanaCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton aceptarCrearGrupoBoton;
     private javax.swing.JDialog crearDialog;
+    private javax.swing.JButton crearGrupoBoton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -316,7 +395,8 @@ public class VentanaCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField nombreCanalField;
-    private javax.swing.JTextField nombreUsuarioField;
+    private javax.swing.JTextField nombreUsuariolField;
+    private javax.swing.JButton suscribirBoton;
     private javax.swing.JDialog suscribirCrearDialog;
     // End of variables declaration//GEN-END:variables
 }
