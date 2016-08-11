@@ -5,6 +5,8 @@
  */
 package RedisChat;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -29,10 +31,15 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
      * Creates new form VentanaVerGrupos
      */
     public static String canalVerifica = "";
+    private final Jedis publisherJedis;
+    private final JedisPool jedispool;
+    private int indexMenuItem=0;
+    private String nombreCanalEscogido=null;
     
     public VentanaVerGrupos(final HashMap<String, String> canales, JedisPool jedispool) {
         initComponents();
-        final Jedis publisherJedis = jedispool.getResource();
+        this.jedispool = jedispool;
+        publisherJedis = jedispool.getResource();
         
         final DefaultListModel listModel = new DefaultListModel();
         Iterator<String> cns = canales.keySet().iterator();
@@ -52,9 +59,12 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
                 if(evt.getClickCount()== 1){
                         if(evt.getButton()==MouseEvent.BUTTON3){
                             int index = list.locationToIndex(evt.getPoint());
-                            
-                              
+                            String nombre= listModel.getElementAt(index).toString();
+                            System.out.println(nombre);
                             jPopupMenu1.show(list, evt.getX(), evt.getY());
+                            indexMenuItem=index;
+                            nombreCanalEscogido=nombre;
+                            //eliminarCanalMenuItem.addActionListener(new elminarCanalActionListener(index,nombre));
                             
                         }                     
                 }
@@ -172,8 +182,44 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
 
     private void eliminarCanalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCanalMenuItemActionPerformed
         // TODO add your handling code here:
+        System.out.println(indexMenuItem+" "+nombreCanalEscogido);
+        Subscriber2.canalesCliente.remove(nombreCanalEscogido);
+        Subcribir_Crear.canalesSuscritos.remove(nombreCanalEscogido);
+        VentanaCliente.canalesSuscritos.remove(nombreCanalEscogido);
+        System.out.println("Usted acaba de eliminar el canal/grupo "+ nombreCanalEscogido);
+        Subscriber2 subscriber = VentanaCliente.subscriberCanales.get(nombreCanalEscogido);
+        subscriber.unsubscribe();
+        jedispool.returnResource(publisherJedis);
+        ((DefaultListModel)jList1.getModel()).removeElementAt(indexMenuItem);
     }//GEN-LAST:event_eliminarCanalMenuItemActionPerformed
+    
+    private class elminarCanalActionListener implements ActionListener {
+        private String nombreCanal;
 
+        private int index;
+        //private 
+        public elminarCanalActionListener(int index,String nombreCanal) {
+            this.nombreCanal = nombreCanal;
+
+            this.index = index;
+        }
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(eliminarCanalMenuItem.isSelected());
+            
+            if(eliminarCanalMenuItem.isSelected()){
+                System.out.println(index+" "+nombreCanal);
+                Subscriber2.canalesCliente.remove(nombreCanal);
+                Subcribir_Crear.canalesSuscritos.remove(nombreCanal);
+                VentanaCliente.canalesSuscritos.remove(nombreCanal);
+                System.out.println("Usted acaba de eliminar el canal/grupo "+ nombreCanal);
+                Subscriber2 subscriber = VentanaCliente.subscriberCanales.get(nombreCanal);
+                subscriber.unsubscribe();
+                jedispool.returnResource(publisherJedis);
+                ((DefaultListModel)jList1.getModel()).removeElementAt(index);
+            }
+            
+        }
+    }
     /**
      * @param args the command line arguments
      */
