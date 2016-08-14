@@ -284,6 +284,7 @@ public class VentanaCliente extends javax.swing.JFrame {
         VentanaSuscribir v = new VentanaSuscribir(IpServidor,canalesSuscritos,subscriberCanales);
         v.setLocationRelativeTo(null);
         v.setVisible(true);
+        suscribirCrearDialog.dispose();
     }//GEN-LAST:event_suscribirBotonActionPerformed
 
     private void aceptarCrearGrupoBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarCrearGrupoBotonActionPerformed
@@ -332,6 +333,7 @@ public class VentanaCliente extends javax.swing.JFrame {
         crearDialog.setResizable(false);
         crearDialog.setLocationRelativeTo(null);
         crearDialog.setVisible(true);
+        suscribirCrearDialog.dispose();
     }//GEN-LAST:event_crearGrupoBotonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

@@ -23,9 +23,16 @@ public class Subscriber2 extends JedisPubSub {
     //    System.out.println("Message received from channel: "+channel+ " Msg: " + message);
            
             ArrayList<String> lista;
+            System.out.println(channel);
+            System.out.println(VentanaVerGrupos.chats);
+            if(VentanaVerGrupos.chats.containsKey(channel)){
+                System.out.println("Mensaje: " + message);
+                VentanaVerGrupos.chats.get(channel).addElement(message);
+                //VentanaChat.listModel.addElement(message);
+            }
             if(VentanaVerGrupos.canalVerifica.equals(channel)){
                 System.out.println("Mensaje: " + message);
-                VentanaChat.listModel.addElement(message);
+                //VentanaChat.listModel.addElement(message);
             }
             if(canalesCliente.containsKey(channel)){
                 lista= (ArrayList)canalesCliente.get(channel);

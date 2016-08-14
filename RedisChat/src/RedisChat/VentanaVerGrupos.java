@@ -31,6 +31,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
      * Creates new form VentanaVerGrupos
      */
     public static String canalVerifica = "";
+    public static HashMap<String, DefaultListModel> chats = new HashMap<>();
     private final Jedis publisherJedis;
     private final JedisPool jedispool;
     private int indexMenuItem=0;
@@ -38,6 +39,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
     
     public VentanaVerGrupos(final HashMap<String, String> canales, JedisPool jedispool) {
         initComponents();
+        final VentanaVerGrupos vg = this;
         this.jedispool = jedispool;
         publisherJedis = jedispool.getResource();
         
@@ -53,6 +55,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jList1);
         jList1.addMouseListener(new MouseAdapter() {
+            
             public void mouseClicked(MouseEvent evt) {
                 ArrayList<String> mensajes = null;
                 JList list = (JList)evt.getSource();
@@ -72,6 +75,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
                     int index = list.locationToIndex(evt.getPoint());
                     String nombreCanal = jList1.getSelectedValue().toString();
                     canalVerifica=nombreCanal;
+                    
                     if ((nombreCanal) != null){
                         mensajes =  (ArrayList<String>) Subscriber2.canalesCliente.get(nombreCanal);
                         System.out.println(mensajes);
@@ -85,8 +89,10 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(VentanaVerGrupos.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    chats.put(nombreCanal, v.getListModel());
                     v.setVisible(true);
                     v.setLocationRelativeTo(null);
+                    vg.dispose();
                     
                     // Double-click detected
                 } else if (evt.getClickCount() == 3) {

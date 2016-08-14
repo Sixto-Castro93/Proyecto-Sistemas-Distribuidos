@@ -23,7 +23,11 @@ public class VentanaChat extends javax.swing.JFrame {
     private final Jedis publisherJedis ;
     private final String nombreCanal;
     private final String nombreUsuario;
-    public static DefaultListModel listModel;
+    public DefaultListModel listModel;
+
+    public DefaultListModel getListModel() {
+        return listModel;
+    }
     /**
      * Creates new form VentanaChat
      */
@@ -31,6 +35,7 @@ public class VentanaChat extends javax.swing.JFrame {
         this.publisherJedis = publisherJedis;
         this.nombreCanal = canal;
         this.nombreUsuario=usuario;
+        this.setTitle(canal);
         initComponents();
         this.nombreUsuarioLabel.setText(usuario);
         nombreGrupoLabel.setText(canal);
@@ -73,6 +78,11 @@ public class VentanaChat extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
         jLabel1.setText("Grupo:");
@@ -172,8 +182,14 @@ public class VentanaChat extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        VentanaVerGrupos.chats.remove(nombreCanal);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        VentanaVerGrupos.chats.remove(nombreCanal);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
