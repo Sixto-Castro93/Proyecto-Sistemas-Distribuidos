@@ -5,6 +5,8 @@
  */
 package RedisChat;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,8 +21,8 @@ import redis.clients.jedis.Jedis;
  * @author USUARIO
  */
 public class VentanaChat extends javax.swing.JFrame {
-    
-    private final Jedis publisherJedis ;
+
+    private final Jedis publisherJedis;
     private final String nombreCanal;
     private final String nombreUsuario;
     public DefaultListModel listModel;
@@ -28,13 +30,14 @@ public class VentanaChat extends javax.swing.JFrame {
     public DefaultListModel getListModel() {
         return listModel;
     }
+
     /**
      * Creates new form VentanaChat
      */
-    public VentanaChat(ArrayList<String> mensajes,Jedis publisherJedis, String canal,String usuario) throws IOException {
+    public VentanaChat(ArrayList<String> mensajes, Jedis publisherJedis, String canal, String usuario) throws IOException {
         this.publisherJedis = publisherJedis;
         this.nombreCanal = canal;
-        this.nombreUsuario=usuario;
+        this.nombreUsuario = usuario;
         this.setTitle(canal);
         initComponents();
         this.nombreUsuarioLabel.setText(usuario);
@@ -46,14 +49,21 @@ public class VentanaChat extends javax.swing.JFrame {
             for (String mensaje : mensajes) {
                 listModel.addElement(mensaje);
             }
-            
+
         }
         jList1 = new JList(listModel);
+        Font font;
+        font = new Font("Tempus Sans ITC", Font.BOLD, 14);
+        Font font2;
+        font2 = new Font("Tempus Sans ITC", Font.BOLD, 14);
+        jList1.setFont(font);
+        jList1.setBackground(Color.DARK_GRAY);
+        jList1.setForeground(Color.WHITE);
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jList1);
-        
-        
+        mensajeTextArea.setFont(font);
+
     }
 
     /**
@@ -75,96 +85,77 @@ public class VentanaChat extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         nombreUsuarioLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
+        jLabel1.setBackground(new java.awt.Color(0, 51, 51));
+        jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Grupo:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
 
-        nombreGrupoLabel.setFont(new java.awt.Font("Traditional Arabic", 2, 18)); // NOI18N
-        nombreGrupoLabel.setForeground(new java.awt.Color(0, 102, 255));
+        nombreGrupoLabel.setBackground(new java.awt.Color(0, 51, 51));
+        nombreGrupoLabel.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
+        nombreGrupoLabel.setForeground(new java.awt.Color(204, 255, 255));
         nombreGrupoLabel.setText("Nombre del Grupo");
+        getContentPane().add(nombreGrupoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 244, -1));
 
         jScrollPane1.setViewportView(jList1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 420, 180));
 
         mensajeTextArea.setColumns(20);
         mensajeTextArea.setRows(5);
         mensajeTextArea.setAutoscrolls(false);
         jScrollPane2.setViewportView(mensajeTextArea);
 
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 420, 30));
+
+        Enviar.setBackground(new java.awt.Color(0, 51, 51));
+        Enviar.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        Enviar.setForeground(new java.awt.Color(255, 255, 255));
         Enviar.setText("Enviar");
         Enviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EnviarActionPerformed(evt);
             }
         });
+        getContentPane().add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 370, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
+        jLabel2.setBackground(new java.awt.Color(0, 51, 51));
+        jLabel2.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Usuario:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, -1));
 
-        nombreUsuarioLabel.setFont(new java.awt.Font("Traditional Arabic", 2, 18)); // NOI18N
-        nombreUsuarioLabel.setForeground(new java.awt.Color(0, 102, 255));
+        nombreUsuarioLabel.setBackground(new java.awt.Color(0, 51, 51));
+        nombreUsuarioLabel.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
+        nombreUsuarioLabel.setForeground(new java.awt.Color(204, 255, 255));
         nombreUsuarioLabel.setText("Nombre de usuario");
+        getContentPane().add(nombreUsuarioLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 244, -1));
 
+        jButton1.setBackground(new java.awt.Color(0, 51, 51));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Cerrar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 370, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nombreGrupoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Enviar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nombreUsuarioLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(70, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(nombreGrupoLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(nombreUsuarioLabel))
-                .addGap(1, 1, 1)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(Enviar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
-        );
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/chats_opt.jpg"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -172,12 +163,12 @@ public class VentanaChat extends javax.swing.JFrame {
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
         // TODO add your handling code here:
         String mensaje = mensajeTextArea.getText().toString();
-        if(!mensaje.isEmpty()){
-            publisherJedis.publish(nombreCanal,nombreUsuario+":"+ mensaje);
+        if (!mensaje.isEmpty()) {
+            publisherJedis.publish(nombreCanal, nombreUsuario + ": " + mensaje);
             mensajeTextArea.setText("");
             //listModel.addElement(nombreUsuario+":"+ mensaje);
         }
-            
+
     }//GEN-LAST:event_EnviarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -231,6 +222,7 @@ public class VentanaChat extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

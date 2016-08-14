@@ -5,9 +5,14 @@
  */
 package RedisChat;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -24,15 +29,25 @@ public class VentanaCliente extends javax.swing.JFrame {
     public static HashMap<String, String> canalesSuscritos = new HashMap<>();
     public static HashMap<String, Subscriber2> subscriberCanales = new HashMap<>();
     public static final String channel_name = "redisChannel";
-    public static boolean validaVerMsj=false;
-    private static String IpServidor=null;
+    public static boolean validaVerMsj = false;
+    private static String IpServidor = null;
     private static final Subscriber2 subscriber = new Subscriber2();
     private static Jedis subscriberJedis = null;
     private static JedisPool jedispool;
-    
+
     public VentanaCliente() {
         initComponents();
-        
+        Font font;
+        font = new Font("Tempus Sans ITC", Font.BOLD, 16);
+
+        nombreCanalField.setFont(font);
+        nombreUsuariolField.setFont(font);
+
+    }
+
+    public Image getIconImage() {
+        Image retValeu = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/logo.jpe"));
+        return retValeu;
     }
 
     /**
@@ -49,6 +64,7 @@ public class VentanaCliente extends javax.swing.JFrame {
         crearGrupoBoton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         crearDialog = new javax.swing.JDialog();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -57,218 +73,177 @@ public class VentanaCliente extends javax.swing.JFrame {
         nombreCanalField = new javax.swing.JTextField();
         aceptarCrearGrupoBoton = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
         suscribirCrearDialog.setTitle("Suscribir/Crear");
+        suscribirCrearDialog.setUndecorated(true);
         suscribirCrearDialog.setResizable(false);
+        suscribirCrearDialog.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        suscribirBoton.setBackground(new java.awt.Color(51, 204, 255));
+        suscribirBoton.setBackground(new java.awt.Color(0, 51, 51));
+        suscribirBoton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        suscribirBoton.setForeground(new java.awt.Color(255, 255, 255));
         suscribirBoton.setText("Suscribirse");
         suscribirBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 suscribirBotonActionPerformed(evt);
             }
         });
+        suscribirCrearDialog.getContentPane().add(suscribirBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 130, -1));
 
-        crearGrupoBoton.setBackground(new java.awt.Color(51, 204, 255));
+        crearGrupoBoton.setBackground(new java.awt.Color(0, 102, 102));
+        crearGrupoBoton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        crearGrupoBoton.setForeground(new java.awt.Color(255, 255, 255));
         crearGrupoBoton.setText("Crear Grupo");
         crearGrupoBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 crearGrupoBotonActionPerformed(evt);
             }
         });
+        suscribirCrearDialog.getContentPane().add(crearGrupoBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Traditional Arabic", 0, 24)); // NOI18N
-        jLabel2.setText("Suscribirse a Grupo o Crear uno");
+        jLabel2.setFont(new java.awt.Font("Traditional Arabic", 1, 30)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Suscribirse/Crear Grupo");
+        suscribirCrearDialog.getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
 
+        jButton6.setBackground(new java.awt.Color(0, 51, 51));
+        jButton6.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("Cancelar");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
+        suscribirCrearDialog.getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, 130, -1));
 
-        javax.swing.GroupLayout suscribirCrearDialogLayout = new javax.swing.GroupLayout(suscribirCrearDialog.getContentPane());
-        suscribirCrearDialog.getContentPane().setLayout(suscribirCrearDialogLayout);
-        suscribirCrearDialogLayout.setHorizontalGroup(
-            suscribirCrearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, suscribirCrearDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(suscribirCrearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(suscribirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(crearGrupoBoton))
-                .addGap(122, 122, 122))
-            .addGroup(suscribirCrearDialogLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(suscribirCrearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton6)
-                    .addComponent(jLabel2))
-                .addGap(21, 21, 21))
-        );
-        suscribirCrearDialogLayout.setVerticalGroup(
-            suscribirCrearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(suscribirCrearDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(30, 30, 30)
-                .addComponent(suscribirBoton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(crearGrupoBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton6)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/menucrear_opt.jpg"))); // NOI18N
+        suscribirCrearDialog.getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
+        crearDialog.setUndecorated(true);
         crearDialog.setResizable(false);
+        crearDialog.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Traditional Arabic", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Traditional Arabic", 1, 30)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Crear Grupo");
+        crearDialog.getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Traditional Arabic", 0, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel4.setFont(new java.awt.Font("Traditional Arabic", 1, 20)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Nombre del Canal:");
+        crearDialog.getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, -1));
 
-        jLabel5.setFont(new java.awt.Font("Traditional Arabic", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel5.setFont(new java.awt.Font("Traditional Arabic", 1, 20)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Nombre de Usuario:");
+        crearDialog.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, -1, -1));
+        crearDialog.getContentPane().add(nombreUsuariolField, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 240, 174, -1));
 
+        nombreCanalField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nombreCanalFieldActionPerformed(evt);
+            }
+        });
+        crearDialog.getContentPane().add(nombreCanalField, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 180, 174, -1));
+
+        aceptarCrearGrupoBoton.setBackground(new java.awt.Color(0, 51, 51));
+        aceptarCrearGrupoBoton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        aceptarCrearGrupoBoton.setForeground(new java.awt.Color(255, 255, 255));
         aceptarCrearGrupoBoton.setText("Aceptar");
         aceptarCrearGrupoBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aceptarCrearGrupoBotonActionPerformed(evt);
             }
         });
+        crearDialog.getContentPane().add(aceptarCrearGrupoBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 350, -1, -1));
 
+        jButton8.setBackground(new java.awt.Color(0, 51, 51));
+        jButton8.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton8.setForeground(new java.awt.Color(255, 255, 255));
         jButton8.setText("Cancelar");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
             }
         });
+        crearDialog.getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, -1, -1));
 
-        javax.swing.GroupLayout crearDialogLayout = new javax.swing.GroupLayout(crearDialog.getContentPane());
-        crearDialog.getContentPane().setLayout(crearDialogLayout);
-        crearDialogLayout.setHorizontalGroup(
-            crearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(crearDialogLayout.createSequentialGroup()
-                .addGap(96, 96, 96)
-                .addGroup(crearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4)
-                    .addComponent(nombreUsuariolField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nombreCanalField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(81, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, crearDialogLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jButton8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(aceptarCrearGrupoBoton)
-                .addGap(21, 21, 21))
-        );
-        crearDialogLayout.setVerticalGroup(
-            crearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(crearDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nombreCanalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nombreUsuariolField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(crearDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(aceptarCrearGrupoBoton)
-                    .addComponent(jButton8))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/creargrupo_opt.jpg"))); // NOI18N
+        crearDialog.getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 450));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RedisChat");
+        setIconImage(getIconImage());
+        setUndecorated(true);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 24)); // NOI18N
-        jLabel1.setText("Bienvenidos a RedisChat :)");
+        jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 30)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Bienvenidos a RedisChat");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, 40));
 
-        jButton1.setBackground(new java.awt.Color(51, 204, 255));
+        jButton1.setBackground(new java.awt.Color(0, 51, 51));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Suscribirse/Crear Grupo de Chat");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, 315, -1));
 
-        jButton2.setBackground(new java.awt.Color(51, 204, 255));
+        jButton2.setBackground(new java.awt.Color(0, 51, 51));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Ver Grupos Suscritos");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, 315, -1));
 
-        jButton3.setBackground(new java.awt.Color(51, 204, 255));
+        jButton3.setBackground(new java.awt.Color(0, 51, 51));
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Información");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 315, -1));
 
-        jButton5.setBackground(new java.awt.Color(51, 204, 255));
+        jButton5.setBackground(new java.awt.Color(0, 51, 51));
+        jButton5.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Salir");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 360, 187, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(94, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addGap(31, 31, 31)
-                .addComponent(jButton2)
-                .addGap(31, 31, 31)
-                .addComponent(jButton3)
-                .addGap(30, 30, 30)
-                .addComponent(jButton5)
-                .addContainerGap(51, Short.MAX_VALUE))
-        );
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.jpg"))); // NOI18N
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 430));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        suscribirCrearDialog.setSize(351, 220);
+        suscribirCrearDialog.setSize(420, 430);
         suscribirCrearDialog.setResizable(false);
         suscribirCrearDialog.setLocationRelativeTo(null);
         suscribirCrearDialog.setVisible(true);
@@ -281,7 +256,7 @@ public class VentanaCliente extends javax.swing.JFrame {
 
     private void suscribirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suscribirBotonActionPerformed
         // TODO add your handling code here:
-        VentanaSuscribir v = new VentanaSuscribir(IpServidor,canalesSuscritos,subscriberCanales);
+        VentanaSuscribir v = new VentanaSuscribir(IpServidor, canalesSuscritos, subscriberCanales);
         v.setLocationRelativeTo(null);
         v.setVisible(true);
         suscribirCrearDialog.dispose();
@@ -291,13 +266,13 @@ public class VentanaCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         final String canalNuevo = nombreCanalField.getText().toString();
         String nombreUsuario = nombreUsuariolField.getText().toString();
-        if(!canalNuevo.isEmpty() && !nombreUsuario.isEmpty()){
+        if (!canalNuevo.isEmpty() && !nombreUsuario.isEmpty()) {
             String canal_verificacion = (String) canalesSuscritos.get(canalNuevo);
             if (canal_verificacion != null) {
                 System.out.println("Ud ya se encuentra registrado a este grupo");
                 JOptionPane.showMessageDialog(null, "Ya se encuentra registrado a un grupo con  este nombre", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                
+
                 subscriberCanales.put(canalNuevo, subscriber);
                 canalesSuscritos.put(canalNuevo, nombreUsuario);
                 new Thread(new Runnable() {
@@ -306,7 +281,6 @@ public class VentanaCliente extends javax.swing.JFrame {
                         try {
 
                             subscriberJedis.subscribe(subscriber, (String) canalNuevo);
-                            
 
                         } catch (Exception e) {
                             System.out.println("Subscribing failed." + e);
@@ -316,9 +290,14 @@ public class VentanaCliente extends javax.swing.JFrame {
                 crearDialog.dispose();
                 suscribirCrearDialog.dispose();
                 JOptionPane.showMessageDialog(null, "Se creo el nuevo canal de chat con exito");
-                
+
                 System.out.println("Subscricion terminada a: " + canalNuevo);
             }
+        }
+        else {
+        System.out.println("Porfavor Ingrese valores en los dos campos");
+                JOptionPane.showMessageDialog(null, "Ingrese valores tanto en nombre del grupo como de usuario", "Error", JOptionPane.ERROR_MESSAGE);
+           
         }
     }//GEN-LAST:event_aceptarCrearGrupoBotonActionPerformed
 
@@ -329,30 +308,37 @@ public class VentanaCliente extends javax.swing.JFrame {
 
     private void crearGrupoBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearGrupoBotonActionPerformed
         // TODO add your handling code here:
-        crearDialog.setSize(351, 279);
+        crearDialog.setSize(420, 430);
         crearDialog.setResizable(false);
         crearDialog.setLocationRelativeTo(null);
         crearDialog.setVisible(true);
+
         suscribirCrearDialog.dispose();
     }//GEN-LAST:event_crearGrupoBotonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        VentanaVerGrupos v = new VentanaVerGrupos(canalesSuscritos,jedispool);
+        VentanaVerGrupos v = new VentanaVerGrupos(canalesSuscritos, jedispool);
         v.setLocationRelativeTo(null);
         v.setResizable(false);
         v.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        //Implementar Información
+        VentanaInfo v = new VentanaInfo();
+        v.setLocationRelativeTo(null);
+        v.setResizable(false);
+        v.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void nombreCanalFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreCanalFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nombreCanalFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -385,12 +371,12 @@ public class VentanaCliente extends javax.swing.JFrame {
         IpServidor = args[0];
         jedispool = new JedisPool(IpServidor);
         subscriberJedis = jedispool.getResource();
-        HashMap<String,String> canalesSub = new HashMap<String,String>();
-        
+        HashMap<String, String> canalesSub = new HashMap<String, String>();
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                VentanaCliente v= new VentanaCliente();;
-                        
+                VentanaCliente v = new VentanaCliente();;
+
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
             }
@@ -412,6 +398,9 @@ public class VentanaCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField nombreCanalField;
     private javax.swing.JTextField nombreUsuariolField;
     private javax.swing.JButton suscribirBoton;

@@ -5,6 +5,8 @@
  */
 package RedisChat;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -34,15 +36,15 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
     public static HashMap<String, DefaultListModel> chats = new HashMap<>();
     private final Jedis publisherJedis;
     private final JedisPool jedispool;
-    private int indexMenuItem=0;
-    private String nombreCanalEscogido=null;
-    
+    private int indexMenuItem = 0;
+    private String nombreCanalEscogido = null;
+
     public VentanaVerGrupos(final HashMap<String, String> canales, JedisPool jedispool) {
         initComponents();
         final VentanaVerGrupos vg = this;
         this.jedispool = jedispool;
         publisherJedis = jedispool.getResource();
-        
+
         final DefaultListModel listModel = new DefaultListModel();
         Iterator<String> cns = canales.keySet().iterator();
         String claveCanal;
@@ -51,41 +53,45 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
             listModel.addElement(claveCanal);
         }
         jList1 = new JList(listModel);
+        Font font;
+        font = new Font("Tempus Sans ITC", Font.BOLD, 16);
+
+        jList1.setFont(font);
+        jList1.setBackground(Color.BLACK);
+        jList1.setForeground(Color.WHITE);
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jList1);
         jList1.addMouseListener(new MouseAdapter() {
-            
+
             public void mouseClicked(MouseEvent evt) {
                 ArrayList<String> mensajes = null;
-                JList list = (JList)evt.getSource();
-                if(evt.getClickCount()== 1){
-                        if(evt.getButton()==MouseEvent.BUTTON3){
-                            int index = list.locationToIndex(evt.getPoint());
-                            String nombre= listModel.getElementAt(index).toString();
-                            System.out.println(nombre);
-                            jPopupMenu1.show(list, evt.getX(), evt.getY());
-                            indexMenuItem=index;
-                            nombreCanalEscogido=nombre;
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 1) {
+                    if (evt.getButton() == MouseEvent.BUTTON3) {
+                        int index = list.locationToIndex(evt.getPoint());
+                        String nombre = listModel.getElementAt(index).toString();
+                        System.out.println(nombre);
+                        jPopupMenu1.show(list, evt.getX(), evt.getY());
+                        indexMenuItem = index;
+                        nombreCanalEscogido = nombre;
                             //eliminarCanalMenuItem.addActionListener(new elminarCanalActionListener(index,nombre));
-                            
-                        }                     
+
+                    }
                 }
-                if (evt.getClickCount() == 2 && evt.getButton()==MouseEvent.BUTTON1) {
+                if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
                     int index = list.locationToIndex(evt.getPoint());
                     String nombreCanal = jList1.getSelectedValue().toString();
-                    canalVerifica=nombreCanal;
-                    
-                    if ((nombreCanal) != null){
-                        mensajes =  (ArrayList<String>) Subscriber2.canalesCliente.get(nombreCanal);
+                    canalVerifica = nombreCanal;
+
+                    if ((nombreCanal) != null) {
+                        mensajes = (ArrayList<String>) Subscriber2.canalesCliente.get(nombreCanal);
                         System.out.println(mensajes);
                     }
-                    
-                    
-                    
+
                     VentanaChat v = null;
                     try {
-                        v = new VentanaChat(mensajes,publisherJedis,nombreCanal,canales.get(nombreCanal));
+                        v = new VentanaChat(mensajes, publisherJedis, nombreCanal, canales.get(nombreCanal));
                     } catch (IOException ex) {
                         Logger.getLogger(VentanaVerGrupos.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -93,7 +99,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
                     v.setVisible(true);
                     v.setLocationRelativeTo(null);
                     vg.dispose();
-                    
+
                     // Double-click detected
                 } else if (evt.getClickCount() == 3) {
 
@@ -120,6 +126,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         eliminarCanalMenuItem.setText("Eliminar Canal");
         eliminarCanalMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -130,53 +137,38 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
         jPopupMenu1.add(eliminarCanalMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jList1);
 
-        jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 24)); // NOI18N
-        jLabel1.setText("Escoja un Grupo para ver chat");
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 420, 200));
 
-        jLabel2.setFont(new java.awt.Font("Traditional Arabic", 0, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 153, 153));
+        jLabel1.setFont(new java.awt.Font("Traditional Arabic", 1, 30)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Escoja un Grupo (doble clic)");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Grupos Disponibles:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
 
+        jButton1.setBackground(new java.awt.Color(0, 51, 51));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Cancelar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 340, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(51, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(40, 40, 40))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jButton1)
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/escoger_grupo_opt.jpg"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -188,44 +180,49 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
 
     private void eliminarCanalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCanalMenuItemActionPerformed
         // TODO add your handling code here:
-        System.out.println(indexMenuItem+" "+nombreCanalEscogido);
+        System.out.println(indexMenuItem + " " + nombreCanalEscogido);
         Subscriber2.canalesCliente.remove(nombreCanalEscogido);
         Subcribir_Crear.canalesSuscritos.remove(nombreCanalEscogido);
         VentanaCliente.canalesSuscritos.remove(nombreCanalEscogido);
-        System.out.println("Usted acaba de eliminar el canal/grupo "+ nombreCanalEscogido);
+        System.out.println("Usted acaba de eliminar el canal/grupo " + nombreCanalEscogido);
         Subscriber2 subscriber = VentanaCliente.subscriberCanales.get(nombreCanalEscogido);
         subscriber.unsubscribe();
         jedispool.returnResource(publisherJedis);
-        ((DefaultListModel)jList1.getModel()).removeElementAt(indexMenuItem);
+        ((DefaultListModel) jList1.getModel()).removeElementAt(indexMenuItem);
     }//GEN-LAST:event_eliminarCanalMenuItemActionPerformed
-    
+
     private class elminarCanalActionListener implements ActionListener {
+
         private String nombreCanal;
 
         private int index;
+
         //private 
-        public elminarCanalActionListener(int index,String nombreCanal) {
+
+        public elminarCanalActionListener(int index, String nombreCanal) {
             this.nombreCanal = nombreCanal;
 
             this.index = index;
         }
+
         public void actionPerformed(ActionEvent e) {
             System.out.println(eliminarCanalMenuItem.isSelected());
-            
-            if(eliminarCanalMenuItem.isSelected()){
-                System.out.println(index+" "+nombreCanal);
+
+            if (eliminarCanalMenuItem.isSelected()) {
+                System.out.println(index + " " + nombreCanal);
                 Subscriber2.canalesCliente.remove(nombreCanal);
                 Subcribir_Crear.canalesSuscritos.remove(nombreCanal);
                 VentanaCliente.canalesSuscritos.remove(nombreCanal);
-                System.out.println("Usted acaba de eliminar el canal/grupo "+ nombreCanal);
+                System.out.println("Usted acaba de eliminar el canal/grupo " + nombreCanal);
                 Subscriber2 subscriber = VentanaCliente.subscriberCanales.get(nombreCanal);
                 subscriber.unsubscribe();
                 jedispool.returnResource(publisherJedis);
-                ((DefaultListModel)jList1.getModel()).removeElementAt(index);
+                ((DefaultListModel) jList1.getModel()).removeElementAt(index);
             }
-            
+
         }
     }
+
     /**
      * @param args the command line arguments
      */
@@ -266,6 +263,7 @@ public class VentanaVerGrupos extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JList jList1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
