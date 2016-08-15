@@ -5,8 +5,10 @@
  */
 package RedisChat;
 
+import static RedisChat.VentanaChat.jScrollPane1;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JScrollBar;
 import redis.clients.jedis.JedisPubSub;
 
 /**

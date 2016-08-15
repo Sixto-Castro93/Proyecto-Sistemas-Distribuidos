@@ -226,7 +226,7 @@ Component padre;
 
         }
         else {
-        JOptionPane.showMessageDialog(this, "Por favor ingrese un nombre valido","",JOptionPane.INFORMATION_MESSAGE,imagen2);
+        JOptionPane.showMessageDialog(this, "Por favor ingrese un nombre válido","",JOptionPane.INFORMATION_MESSAGE,imagen2);
             }
     }//GEN-LAST:event_aceptarBotonActionPerformed
 

@@ -10,6 +10,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JScrollBar;
 import javax.swing.ListSelectionModel;
 import redis.clients.jedis.Jedis;
 
@@ -68,7 +71,14 @@ public class VentanaChat extends javax.swing.JFrame {
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jList1);
+        jScrollPane1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+            e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+            }});
         mensajeTextArea.setFont(font);
+        
+
 
     }
 
@@ -181,9 +191,10 @@ public class VentanaChat extends javax.swing.JFrame {
         if (!mensaje.isEmpty() && !(mensaje.equals("\n"))) {
             publisherJedis.publish(nombreCanal, nombreUsuario + ": " + mensaje);
             mensajeTextArea.setText("");
-            //listModel.addElement(nombreUsuario+":"+ mensaje);
+            
         } else {
             mensajeTextArea.setText("");
+           
         }
 
     }//GEN-LAST:event_EnviarActionPerformed
@@ -249,7 +260,7 @@ public class VentanaChat extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    public static javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea mensajeTextArea;
     private javax.swing.JLabel nombreGrupoLabel;

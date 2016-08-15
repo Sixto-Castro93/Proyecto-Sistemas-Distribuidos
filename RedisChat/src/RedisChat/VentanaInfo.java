@@ -64,7 +64,7 @@ public class VentanaInfo extends javax.swing.JFrame {
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("    Aplicación de Multichat mediante \n        el Middleware de Redis, los \n     usuarios podran elejir unirse a \n        un grupo creado o crear su \n   propio grupo para poder comunicarse\n \t      con sus amigos.\n\nIntegrantes:\n\t\tMarlon Espinoza\n\t\tSixto Castro\n\t\tJordy Vásquez");
+        jTextArea1.setText("    Aplicación Multichat mediante \n        el middleware Redis. Los \n     usuarios podran elejir unirse a \n        un grupo creado o crear su \n   propio grupo para poder comunicarse\n \t      con sus amigos.\n\n   Integrantes:\n\t       Marlon Espinoza\n\t       Sixto Castro\n\t       Jordy Vásquez");
         jScrollPane1.setViewportView(jTextArea1);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 400, 270));

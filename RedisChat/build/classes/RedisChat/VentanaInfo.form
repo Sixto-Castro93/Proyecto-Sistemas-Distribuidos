@@ -54,7 +54,7 @@
             </Property>
             <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="    Aplicaci&#xf3;n de Multichat mediante &#xa;        el Middleware de Redis, los &#xa;     usuarios podran elejir unirse a &#xa;        un grupo creado o crear su &#xa;   propio grupo para poder comunicarse&#xa; &#x9;      con sus amigos.&#xa;&#xa;Integrantes:&#xa;&#x9;&#x9;Marlon Espinoza&#xa;&#x9;&#x9;Sixto Castro&#xa;&#x9;&#x9;Jordy V&#xe1;squez"/>
+            <Property name="text" type="java.lang.String" value="    Aplicaci&#xf3;n Multichat mediante &#xa;        el middleware Redis. Los &#xa;     usuarios podran elejir unirse a &#xa;        un grupo creado o crear su &#xa;   propio grupo para poder comunicarse&#xa; &#x9;      con sus amigos.&#xa;&#xa;   Integrantes:&#xa;&#x9;       Marlon Espinoza&#xa;&#x9;       Sixto Castro&#xa;&#x9;       Jordy V&#xe1;squez"/>
           </Properties>
         </Component>
       </SubComponents>

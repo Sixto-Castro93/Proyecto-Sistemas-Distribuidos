@@ -305,7 +305,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                         }
                     }
                 }).start();
-                 JOptionPane.showMessageDialog(crearDialog, "Se creo el nuevo canal de chat con exito", "", JOptionPane.DEFAULT_OPTION, imagenOk);
+                 JOptionPane.showMessageDialog(crearDialog, "Se creó el nuevo canal de chat exitosamente", "", JOptionPane.DEFAULT_OPTION, imagenOk);
 
                 crearDialog.dispose();
                 
@@ -316,7 +316,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                 System.out.println("Subscricion terminada a: " + canalNuevo);
             }
         } else {
-            System.out.println("Porfavor Ingrese valores en los dos campos");
+            System.out.println("Por favor: Ingrese valores en los dos campos");
             JOptionPane.showMessageDialog(crearDialog, "Ingrese valores tanto en nombre del grupo como de usuario", "Mensaje de Error", JOptionPane.ERROR_MESSAGE, imagen);
         }
     }//GEN-LAST:event_aceptarCrearGrupoBotonActionPerformed
