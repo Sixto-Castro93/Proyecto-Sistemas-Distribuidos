@@ -71,11 +71,6 @@ public class VentanaChat extends javax.swing.JFrame {
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jList1);
-        jScrollPane1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-            e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-            }});
         mensajeTextArea.setFont(font);
         
 

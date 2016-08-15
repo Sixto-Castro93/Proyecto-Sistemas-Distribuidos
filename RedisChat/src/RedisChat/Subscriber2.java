@@ -6,6 +6,8 @@
 package RedisChat;
 
 import static RedisChat.VentanaChat.jScrollPane1;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JScrollBar;
@@ -18,6 +20,7 @@ import redis.clients.jedis.JedisPubSub;
 public class Subscriber2 extends JedisPubSub {
     public static HashMap canalesCliente = new HashMap();
     public static ArrayList<String> listaMensaje = new ArrayList<>();
+    public static AdjustmentListener adj;
      
     @Override
     public void onMessage(String channel, String message)
@@ -30,6 +33,17 @@ public class Subscriber2 extends JedisPubSub {
             if(VentanaVerGrupos.chats.containsKey(channel)){
                 System.out.println("Mensaje: " + message);
                 VentanaVerGrupos.chats.get(channel).addElement(message);
+//                JScrollBar sb = VentanaChat.jScrollPane1.getVerticalScrollBar();
+//                sb.setValue( sb.getMaximum() + sb.getUnitIncrement());
+                adj=new AdjustmentListener() {
+                @Override
+                public void adjustmentValueChanged(AdjustmentEvent e) {
+                    e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+                    jScrollPane1.getVerticalScrollBar().removeAdjustmentListener(this);
+                }};
+                jScrollPane1.getVerticalScrollBar().addAdjustmentListener(adj);
+               
+                
                 //VentanaChat.listModel.addElement(message);
             }
             if(VentanaVerGrupos.canalVerifica.equals(channel)){
