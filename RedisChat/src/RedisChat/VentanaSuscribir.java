@@ -6,12 +6,17 @@
 package RedisChat;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -31,12 +36,13 @@ public class VentanaSuscribir extends javax.swing.JFrame {
     private final Subscriber2 subscriber;
     String nombreCanal;
     final Jedis subscriberJedis;
-
+Component padre;
     /**
      * Creates new form VentanaSuscribir
      */
-    public VentanaSuscribir(String ipServidor, final HashMap<String, String> canalesSuscritos, HashMap<String, Subscriber2> subscriberCanales) {
+    public VentanaSuscribir(String ipServidor, final HashMap<String, String> canalesSuscritos, HashMap<String, Subscriber2> subscriberCanales, Component suscribirCrearDialog) {
         initComponents();
+        padre=suscribirCrearDialog;
         this.canalesSuscritos = canalesSuscritos;
         this.subscriberCanales = subscriberCanales;
         HashMap<String, Subscriber> suscriberCanales = new HashMap<>();
@@ -70,13 +76,16 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                         nombreCanal = jList1.getSelectedValue().toString();
                         String canal_verificacion = (String) canalesSuscritos.get(nombreCanal);
                         if (canal_verificacion != null) {
-                            JOptionPane.showMessageDialog(aceptarBoton, "Ya se encuentra registrado en este canal", "Error", JOptionPane.ERROR_MESSAGE);
+                             Icon imagen;
+                imagen=new ImageIcon(ClassLoader.getSystemResource("imagenes/error_opt.jpg"));
+         
+                            JOptionPane.showMessageDialog(aceptarBoton, "Ya se encuentra registrado en este canal", "Error", JOptionPane.ERROR_MESSAGE,imagen);
                         } else {
                             nombreUsuarioField1.setEditable(true);
                             aceptarBoton.setEnabled(true);
                             nombreUsuarioField1.setText(null);
                             nombreUsuarioField1.setEnabled(true);
-                            nombreUsuarioField1.setText(listModel.get(index).toString());
+                            nombreUsuarioField1.setText("");
                         }
 
                         // Double-click detected
@@ -85,7 +94,10 @@ public class VentanaSuscribir extends javax.swing.JFrame {
             });
         }
     }
-
+   public Image getIconImage() {
+        Image retValeu = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/logo.jpe"));
+        return retValeu;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,10 +107,6 @@ public class VentanaSuscribir extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        nombreDialog = new javax.swing.JDialog();
-        jLabel3 = new javax.swing.JLabel();
-        nombreUsuarioField = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
@@ -109,47 +117,13 @@ public class VentanaSuscribir extends javax.swing.JFrame {
         aceptarBoton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
-        jLabel3.setFont(new java.awt.Font("Traditional Arabic", 0, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 153, 153));
-        jLabel3.setText("Nombre de Usuario:");
-
-        jButton3.setText("Cancelar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+        setIconImage(getIconImage());
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
-
-        javax.swing.GroupLayout nombreDialogLayout = new javax.swing.GroupLayout(nombreDialog.getContentPane());
-        nombreDialog.getContentPane().setLayout(nombreDialogLayout);
-        nombreDialogLayout.setHorizontalGroup(
-            nombreDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(nombreDialogLayout.createSequentialGroup()
-                .addContainerGap(80, Short.MAX_VALUE)
-                .addGroup(nombreDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(nombreUsuarioField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(116, 116, 116))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nombreDialogLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(jButton3)
-                .addGap(68, 68, Short.MAX_VALUE))
-        );
-        nombreDialogLayout.setVerticalGroup(
-            nombreDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(nombreDialogLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreUsuarioField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addGap(22, 22, 22))
-        );
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setUndecorated(true);
-        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jScrollPane1.setBackground(new java.awt.Color(0, 102, 102));
@@ -181,7 +155,7 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 380, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 370, -1, -1));
 
         jLabel5.setBackground(new java.awt.Color(0, 51, 51));
         jLabel5.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
@@ -209,7 +183,7 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                 aceptarBotonActionPerformed(evt);
             }
         });
-        getContentPane().add(aceptarBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 380, -1, -1));
+        getContentPane().add(aceptarBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/escogergrupo_opt.jpg"))); // NOI18N
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -218,18 +192,18 @@ public class VentanaSuscribir extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+       padre.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        nombreDialog.setVisible(false);
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void aceptarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarBotonActionPerformed
         // TODO add your handling code here:
-        if (nombreUsuarioField1.getText() != null) {
+         Icon imagen;
+                imagen=new ImageIcon(ClassLoader.getSystemResource("imagenes/OK_opt.png"));
+           Icon imagen2;
+                imagen2=new ImageIcon(ClassLoader.getSystemResource("imagenes/error_opt.jpg"));
+         
+        if (nombreUsuarioField1.getText() != null && !(nombreUsuarioField1.getText().equals(""))) {
             subscriberCanales.put(nombreCanal, subscriber);
             canalesSuscritos.put(nombreCanal, nombreUsuarioField1.getText().toString());
             new Thread(new Runnable() {
@@ -246,15 +220,23 @@ public class VentanaSuscribir extends javax.swing.JFrame {
                     }
                 }
             }).start();
-            JOptionPane.showMessageDialog(null, "Se ha suscrito al grupo con éxito");
+            JOptionPane.showMessageDialog(this, "Se ha suscrito al grupo con éxito","",JOptionPane.INFORMATION_MESSAGE,imagen);
             this.setVisible(false);
+            padre.setVisible(true);
 
         }
+        else {
+        JOptionPane.showMessageDialog(this, "Por favor ingrese un nombre valido","",JOptionPane.INFORMATION_MESSAGE,imagen2);
+            }
     }//GEN-LAST:event_aceptarBotonActionPerformed
 
     private void nombreUsuarioField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreUsuarioField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nombreUsuarioField1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+      padre.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -296,16 +278,12 @@ public class VentanaSuscribir extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptarBoton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JDialog nombreDialog;
-    private javax.swing.JTextField nombreUsuarioField;
     private javax.swing.JTextField nombreUsuarioField1;
     // End of variables declaration//GEN-END:variables
 }

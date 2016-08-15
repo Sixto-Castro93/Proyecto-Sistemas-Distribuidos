@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -82,8 +85,12 @@ public class VentanaCliente extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         suscribirCrearDialog.setTitle("Suscribir/Crear");
-        suscribirCrearDialog.setUndecorated(true);
         suscribirCrearDialog.setResizable(false);
+        suscribirCrearDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                suscribirCrearDialogWindowClosing(evt);
+            }
+        });
         suscribirCrearDialog.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         suscribirBoton.setBackground(new java.awt.Color(0, 51, 51));
@@ -95,7 +102,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                 suscribirBotonActionPerformed(evt);
             }
         });
-        suscribirCrearDialog.getContentPane().add(suscribirBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 130, -1));
+        suscribirCrearDialog.getContentPane().add(suscribirBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 130, -1));
 
         crearGrupoBoton.setBackground(new java.awt.Color(0, 102, 102));
         crearGrupoBoton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -106,7 +113,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                 crearGrupoBotonActionPerformed(evt);
             }
         });
-        suscribirCrearDialog.getContentPane().add(crearGrupoBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, -1, -1));
+        suscribirCrearDialog.getContentPane().add(crearGrupoBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Traditional Arabic", 1, 30)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -116,19 +123,23 @@ public class VentanaCliente extends javax.swing.JFrame {
         jButton6.setBackground(new java.awt.Color(0, 51, 51));
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setText("Cancelar");
+        jButton6.setText("Regresar");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
-        suscribirCrearDialog.getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, 130, -1));
+        suscribirCrearDialog.getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 310, 130, -1));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/menucrear_opt.jpg"))); // NOI18N
         suscribirCrearDialog.getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        crearDialog.setUndecorated(true);
         crearDialog.setResizable(false);
+        crearDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                crearDialogWindowClosing(evt);
+            }
+        });
         crearDialog.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("Traditional Arabic", 1, 30)); // NOI18N
@@ -163,7 +174,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                 aceptarCrearGrupoBotonActionPerformed(evt);
             }
         });
-        crearDialog.getContentPane().add(aceptarCrearGrupoBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 350, -1, -1));
+        crearDialog.getContentPane().add(aceptarCrearGrupoBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 360, -1, -1));
 
         jButton8.setBackground(new java.awt.Color(0, 51, 51));
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -174,15 +185,14 @@ public class VentanaCliente extends javax.swing.JFrame {
                 jButton8ActionPerformed(evt);
             }
         });
-        crearDialog.getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, -1, -1));
+        crearDialog.getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 360, -1, -1));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/creargrupo_opt.jpg"))); // NOI18N
-        crearDialog.getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 450));
+        crearDialog.getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 440));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RedisChat");
         setIconImage(getIconImage());
-        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -245,32 +255,40 @@ public class VentanaCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         suscribirCrearDialog.setSize(420, 430);
         suscribirCrearDialog.setResizable(false);
-        suscribirCrearDialog.setLocationRelativeTo(null);
+        suscribirCrearDialog.setLocationRelativeTo(this);
+           this.setVisible(false);
         suscribirCrearDialog.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+           this.setVisible(true);
         suscribirCrearDialog.setVisible(false);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void suscribirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suscribirBotonActionPerformed
         // TODO add your handling code here:
-        VentanaSuscribir v = new VentanaSuscribir(IpServidor, canalesSuscritos, subscriberCanales);
-        v.setLocationRelativeTo(null);
+        VentanaSuscribir v = new VentanaSuscribir(IpServidor, canalesSuscritos, subscriberCanales,suscribirCrearDialog);
+        v.setLocationRelativeTo(suscribirCrearDialog);
         v.setVisible(true);
         suscribirCrearDialog.dispose();
     }//GEN-LAST:event_suscribirBotonActionPerformed
 
     private void aceptarCrearGrupoBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarCrearGrupoBotonActionPerformed
         // TODO add your handling code here:
+        Icon imagen;
+        imagen = new ImageIcon(ClassLoader.getSystemResource("imagenes/error_opt.jpg"));
+        Icon imagenOk;
+        imagenOk = new ImageIcon(ClassLoader.getSystemResource("imagenes/OK_opt.png"));
+
         final String canalNuevo = nombreCanalField.getText().toString();
         String nombreUsuario = nombreUsuariolField.getText().toString();
         if (!canalNuevo.isEmpty() && !nombreUsuario.isEmpty()) {
             String canal_verificacion = (String) canalesSuscritos.get(canalNuevo);
             if (canal_verificacion != null) {
                 System.out.println("Ud ya se encuentra registrado a este grupo");
-                JOptionPane.showMessageDialog(null, "Ya se encuentra registrado a un grupo con  este nombre", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(crearDialog, "Ud ya se encuentra registrado a este grupo", "Mensaje de Error", JOptionPane.ERROR_MESSAGE, imagen);
+
             } else {
 
                 subscriberCanales.put(canalNuevo, subscriber);
@@ -287,30 +305,35 @@ public class VentanaCliente extends javax.swing.JFrame {
                         }
                     }
                 }).start();
-                crearDialog.dispose();
-                suscribirCrearDialog.dispose();
-                JOptionPane.showMessageDialog(null, "Se creo el nuevo canal de chat con exito");
+                 JOptionPane.showMessageDialog(crearDialog, "Se creo el nuevo canal de chat con exito", "", JOptionPane.DEFAULT_OPTION, imagenOk);
 
+                crearDialog.dispose();
+                
+              suscribirCrearDialog.setVisible(true);
+                nombreCanalField.setText("");
+                nombreUsuariolField.setText("");
+               
                 System.out.println("Subscricion terminada a: " + canalNuevo);
             }
-        }
-        else {
-        System.out.println("Porfavor Ingrese valores en los dos campos");
-                JOptionPane.showMessageDialog(null, "Ingrese valores tanto en nombre del grupo como de usuario", "Error", JOptionPane.ERROR_MESSAGE);
-           
+        } else {
+            System.out.println("Porfavor Ingrese valores en los dos campos");
+            JOptionPane.showMessageDialog(crearDialog, "Ingrese valores tanto en nombre del grupo como de usuario", "Mensaje de Error", JOptionPane.ERROR_MESSAGE, imagen);
         }
     }//GEN-LAST:event_aceptarCrearGrupoBotonActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
+        nombreCanalField.setText("");
+        nombreUsuariolField.setText("");
         crearDialog.setVisible(false);
+        suscribirCrearDialog.setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void crearGrupoBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearGrupoBotonActionPerformed
         // TODO add your handling code here:
         crearDialog.setSize(420, 430);
         crearDialog.setResizable(false);
-        crearDialog.setLocationRelativeTo(null);
+        crearDialog.setLocationRelativeTo(suscribirCrearDialog);
         crearDialog.setVisible(true);
 
         suscribirCrearDialog.dispose();
@@ -318,16 +341,18 @@ public class VentanaCliente extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        VentanaVerGrupos v = new VentanaVerGrupos(canalesSuscritos, jedispool);
-        v.setLocationRelativeTo(null);
+        VentanaVerGrupos v = new VentanaVerGrupos(canalesSuscritos, jedispool,this);
+        v.setLocationRelativeTo(this);
         v.setResizable(false);
+        this.setVisible(false);
         v.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        VentanaInfo v = new VentanaInfo();
-        v.setLocationRelativeTo(null);
+        VentanaInfo v = new VentanaInfo(this);
+        v.setLocationRelativeTo(this);
         v.setResizable(false);
+        this.setVisible(false);
         v.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -339,6 +364,14 @@ public class VentanaCliente extends javax.swing.JFrame {
     private void nombreCanalFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreCanalFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nombreCanalFieldActionPerformed
+
+    private void suscribirCrearDialogWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_suscribirCrearDialogWindowClosing
+this.setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_suscribirCrearDialogWindowClosing
+
+    private void crearDialogWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_crearDialogWindowClosing
+      suscribirCrearDialog.setVisible(true); 
+    }//GEN-LAST:event_crearDialogWindowClosing
 
     /**
      * @param args the command line arguments
@@ -370,6 +403,10 @@ public class VentanaCliente extends javax.swing.JFrame {
         /* Create and display the form */
         IpServidor = args[0];
         jedispool = new JedisPool(IpServidor);
+       
+        try {
+            
+        
         subscriberJedis = jedispool.getResource();
         HashMap<String, String> canalesSub = new HashMap<String, String>();
 
@@ -381,6 +418,12 @@ public class VentanaCliente extends javax.swing.JFrame {
                 v.setVisible(true);
             }
         });
+    } catch (Exception e) {
+         Icon imagen;
+                imagen=new ImageIcon(ClassLoader.getSystemResource("imagenes/error_opt.jpg"));
+         JOptionPane.showMessageDialog(null, "Inicie el servidor Redis por favor", "Mensaje de Error", JOptionPane.ERROR_MESSAGE, imagen);
+     
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

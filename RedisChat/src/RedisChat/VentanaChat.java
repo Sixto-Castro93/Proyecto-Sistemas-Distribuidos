@@ -6,7 +6,11 @@
 package RedisChat;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,6 +30,7 @@ public class VentanaChat extends javax.swing.JFrame {
     private final String nombreCanal;
     private final String nombreUsuario;
     public DefaultListModel listModel;
+    private Component padre;
 
     public DefaultListModel getListModel() {
         return listModel;
@@ -34,10 +39,11 @@ public class VentanaChat extends javax.swing.JFrame {
     /**
      * Creates new form VentanaChat
      */
-    public VentanaChat(ArrayList<String> mensajes, Jedis publisherJedis, String canal, String usuario) throws IOException {
+    public VentanaChat(ArrayList<String> mensajes, Jedis publisherJedis, String canal, String usuario, Component padre) throws IOException {
         this.publisherJedis = publisherJedis;
         this.nombreCanal = canal;
         this.nombreUsuario = usuario;
+        this.padre = padre;
         this.setTitle(canal);
         initComponents();
         this.nombreUsuarioLabel.setText(usuario);
@@ -66,6 +72,11 @@ public class VentanaChat extends javax.swing.JFrame {
 
     }
 
+    public Image getIconImage() {
+        Image retValeu = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/logo.jpe"));
+        return retValeu;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -87,8 +98,7 @@ public class VentanaChat extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setUndecorated(true);
+        setIconImage(getIconImage());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -116,9 +126,14 @@ public class VentanaChat extends javax.swing.JFrame {
         mensajeTextArea.setColumns(20);
         mensajeTextArea.setRows(5);
         mensajeTextArea.setAutoscrolls(false);
+        mensajeTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                mensajeTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(mensajeTextArea);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 420, 30));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 420, 40));
 
         Enviar.setBackground(new java.awt.Color(0, 51, 51));
         Enviar.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -129,7 +144,7 @@ public class VentanaChat extends javax.swing.JFrame {
                 EnviarActionPerformed(evt);
             }
         });
-        getContentPane().add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 370, -1, -1));
+        getContentPane().add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 370, -1, -1));
 
         jLabel2.setBackground(new java.awt.Color(0, 51, 51));
         jLabel2.setFont(new java.awt.Font("Traditional Arabic", 1, 16)); // NOI18N
@@ -152,7 +167,7 @@ public class VentanaChat extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 370, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 370, -1, -1));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/chats_opt.jpg"))); // NOI18N
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -163,10 +178,12 @@ public class VentanaChat extends javax.swing.JFrame {
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
         // TODO add your handling code here:
         String mensaje = mensajeTextArea.getText().toString();
-        if (!mensaje.isEmpty()) {
+        if (!mensaje.isEmpty() && !(mensaje.equals("\n"))) {
             publisherJedis.publish(nombreCanal, nombreUsuario + ": " + mensaje);
             mensajeTextArea.setText("");
             //listModel.addElement(nombreUsuario+":"+ mensaje);
+        } else {
+            mensajeTextArea.setText("");
         }
 
     }//GEN-LAST:event_EnviarActionPerformed
@@ -175,12 +192,20 @@ public class VentanaChat extends javax.swing.JFrame {
         // TODO add your handling code here:
         VentanaVerGrupos.chats.remove(nombreCanal);
         this.dispose();
+        padre.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         VentanaVerGrupos.chats.remove(nombreCanal);
+           padre.setVisible(true);
     }//GEN-LAST:event_formWindowClosing
+
+    private void mensajeTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mensajeTextAreaKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            Enviar.doClick();
+        }
+     }//GEN-LAST:event_mensajeTextAreaKeyTyped
 
     /**
      * @param args the command line arguments

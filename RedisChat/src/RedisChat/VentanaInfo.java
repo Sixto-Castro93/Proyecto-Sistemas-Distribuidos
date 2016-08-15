@@ -5,17 +5,33 @@
  */
 package RedisChat;
 
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author emele_000
  */
 public class VentanaInfo extends javax.swing.JFrame {
 
+    private Component padre;
+
     /**
      * Creates new form VentanaInfo
+     *
+     * @param pad
      */
-    public VentanaInfo() {
+    public VentanaInfo(Component pad) {
+       
         initComponents();
+         this.padre = pad;
+    }
+
+    public Image getIconImage() {
+        Image retValeu = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/logo.jpe"));
+        return retValeu;
     }
 
     /**
@@ -33,8 +49,12 @@ public class VentanaInfo extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
+        setIconImage(getIconImage());
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTextArea1.setEditable(false);
@@ -44,10 +64,10 @@ public class VentanaInfo extends javax.swing.JFrame {
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("    Aplicación de Multichat mediante \n        el Midleware de Redis, los \n     usuarios podran elejir unirse a \n        un grupo creado o crear su \n   propio grupo para poder comunicarse\n \t      con sus amigos.\n\nIntegrantes:\n\t\tMarlón Espinoza\n\t\tSixto Castro\n\t\tJordy Vásques");
+        jTextArea1.setText("    Aplicación de Multichat mediante \n        el Middleware de Redis, los \n     usuarios podran elejir unirse a \n        un grupo creado o crear su \n   propio grupo para poder comunicarse\n \t      con sus amigos.\n\nIntegrantes:\n\t\tMarlon Espinoza\n\t\tSixto Castro\n\t\tJordy Vásquez");
         jScrollPane1.setViewportView(jTextArea1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 420, 270));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 400, 270));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -63,7 +83,7 @@ public class VentanaInfo extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 370, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 380, -1, -1));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/infoo_opt.png"))); // NOI18N
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 430));
@@ -72,8 +92,16 @@ public class VentanaInfo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-this.setVisible(false);          // TODO add your handling code here:
+        this.setVisible(false);
+        padre.setVisible(true);
+// TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        padre.setVisible(true);
+        
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -105,7 +133,7 @@ this.setVisible(false);          // TODO add your handling code here:
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentanaInfo().setVisible(true);
+                //    new VentanaInfo().setVisible(true);
             }
         });
     }
