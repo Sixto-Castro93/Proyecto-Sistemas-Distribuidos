@@ -22,13 +22,20 @@ Y como extra al proyecto, se ha implementado esta aplicación con sus respectiva
 
 ## MANUAL
 # Instalar Redis
-Siguiendo los pasos de la página de Redis: http://redis.io/topics/quickstart. Ejecutar los siguientes comandos.
+Siguiendo los pasos de la página de Redis: http://redis.io/topics/quickstart. Ejecutar los siguientes comandos:
+* wget http://download.redis.io/redis-stable.tar.gz
+* tar xvzf redis-stable.tar.gz
+* cd redis-stable
+* make
 * sudo mkdir /etc/redis
 * sudo mkdir /var/redis
 
 Y el siguiente paso para activar el servidor de Redis, es ejecutando el comando:
-redis-server
+* redis-server
 
 # Ejecutar el programa
-Para ejecutar el programa, solo se necesita el .jar del programa que se encuentra en el repositorio y ejecutar el siguiente comando por terminal de linux:
-* java -jar nombre-del-archivo.jar localhost
+Para ejecutar el programa, solo se necesita descargar el .jar del programa que se encuentra en el repositorio de github, cuya ruta es:
+* https://github.com/Sixto-Castro93/Proyecto-Sistemas-Distribuidos/blob/master/Distribuidos/target/Distribuidos-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+Y ejecutar el siguiente comando por terminal de linux:
+* java -jar Distribuidos-1.0-SNAPSHOT-jar-with-dependencies.jar ip-del-servidor
