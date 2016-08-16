@@ -23,12 +23,12 @@ Y como extra al proyecto, se ha implementado esta aplicación con sus respectiva
 ## MANUAL
 # Instalar Redis
 Siguiendo los pasos de la página de Redis: http://redis.io/topics/quickstart. Ejecutar los siguientes comandos.
-sudo mkdir /etc/redis
-sudo mkdir /var/redis
+* sudo mkdir /etc/redis
+* sudo mkdir /var/redis
 
 Y el siguiente paso para activar el servidor de Redis, es ejecutando el comando:
 redis-server
 
 # Ejecutar el programa
 Para ejecutar el programa, solo se necesita el .jar del programa que se encuentra en el repositorio y ejecutar el siguiente comando por terminal de linux:
-java -jar nombre-del-archivo.jar localhost
+* java -jar nombre-del-archivo.jar localhost
